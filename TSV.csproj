@@ -63,7 +63,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\Business\" />
 	  <Folder Include="Services\Data\" />
 	</ItemGroup>
 
