@@ -14,9 +14,9 @@
             count++;
 
             if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
+                CounterBtn.Text = $"{count}-mal gedrückt";
             else
-                CounterBtn.Text = $"Clicked {count} times";
+                CounterBtn.Text = $"Schon {count}-mal gedrückt";
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }

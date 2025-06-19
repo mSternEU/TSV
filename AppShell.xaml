@@ -8,7 +8,7 @@
     Title="TSV">
 
     <ShellContent
-        Title="Home"
+        Title="TSV - Tanzschulverwaltung"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
