@@ -1,36 +1,181 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage x:Class="TSV.MainPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TSV.MainPage">
+             Title="{Binding CurrentPageTitle}">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Navigation Bar -->
+            <RowDefinition Height="60" />
+            <!-- Content Area -->
+            <RowDefinition Height="*" />
+            <!-- Bottom Navigation (für später) -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <Label
-                Text="Willkommen!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+        <!-- =====================================================
+             NAVIGATION BAR (Oben)
+             ===================================================== -->
+        <Border Grid.Row="0" 
+                BackgroundColor="{AppThemeBinding Light=#F7F7F7, Dark=#2B2B2B}"
+                StrokeShape="RoundRectangle 0,0,10,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Label
-                Text="Beispielprojekt für eine Kursverwaltung"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Beispielprojekt für eine Kursverwaltung" />
+                <!-- Back Button -->
+                <Button Grid.Column="0"
+                        Text="◀"
+                        FontSize="20"
+                        IsEnabled="{Binding CanGoBack}"
+                        Command="{Binding GoBackCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                        WidthRequest="50" />
 
-            <Button
-                x:Name="CounterBtn"
-                Text="Drück mich!" 
-                SemanticProperties.Hint="Drück mich Du Stück!"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Fill" />
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- Page Title -->
+                <Label Grid.Column="1"
+                       Text="{Binding CurrentPageTitle}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#212121, Dark=#FFFFFF}" />
 
+                <!-- Forward Button -->
+                <Button Grid.Column="2"
+                        Text="▶"
+                        FontSize="20"
+                        IsEnabled="{Binding CanGoForward}"
+                        Command="{Binding GoForwardCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                        WidthRequest="50" />
+
+                <!-- Menu Button (für später) -->
+                <Button Grid.Column="3"
+                        Text="☰"
+                        FontSize="20"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                        WidthRequest="50" />
+            </Grid>
+        </Border>
+
+        <!-- =====================================================
+             MAIN CONTENT (Original Demo + Navigation)
+             ===================================================== -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="25" Padding="30,0" VerticalOptions="Center">
+
+                <!-- Original Demo Content (beibehalten) -->
+                <Image Source="dotnet_bot.png"
+                       HeightRequest="185"
+                       Aspect="AspectFit" />
+
+                <Label x:Name="CounterLabel"
+                       Text="{Binding Text}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
+
+                <Button x:Name="CounterBtn"
+                        Text="Click me"
+                        FontAttributes="Bold"
+                        Command="{Binding ClickCommand}"
+                        HorizontalOptions="Fill" />
+
+                <!-- Separator -->
+                <BoxView HeightRequest="1" 
+                         BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"
+                         Margin="0,20" />
+
+                <!-- =====================================================
+                     TANZSCHUL NAVIGATION (NEU)
+                     ===================================================== -->
+                <Label Text="🩰 Tanzschul-Verwaltung"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}" />
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="15">
+
+                    <!-- Kunden Button -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            BackgroundColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                            StrokeShape="RoundRectangle 15">
+                        <Button Text="👥 Kunden"
+                                Command="{Binding NavigateToKundenCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                HeightRequest="80" />
+                    </Border>
+
+                    <!-- Kurse Button -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            BackgroundColor="{AppThemeBinding Light=#FF6B6B, Dark=#FF8E8E}"
+                            StrokeShape="RoundRectangle 15">
+                        <Button Text="💃 Kurse"
+                                Command="{Binding NavigateToKurseCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                HeightRequest="80" />
+                    </Border>
+
+                    <!-- Team Button -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            BackgroundColor="{AppThemeBinding Light=#4ECDC4, Dark=#6EEEE6}"
+                            StrokeShape="RoundRectangle 15">
+                        <Button Text="🕺 Team"
+                                Command="{Binding NavigateToTeamCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                HeightRequest="80" />
+                    </Border>
+
+                    <!-- Statistik Button -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            BackgroundColor="{AppThemeBinding Light=#45B7D1, Dark=#67C9E3}"
+                            StrokeShape="RoundRectangle 15">
+                        <Button Text="📊 Statistik"
+                                Command="{Binding NavigateToStatistikCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                HeightRequest="80" />
+                    </Border>
+                </Grid>
+
+                <!-- Debug Info (kannst du später entfernen) -->
+                <Label Text="{Binding Count, StringFormat='Debug: Count = {0}'}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- =====================================================
+             BOTTOM AREA (für später: Status, etc.)
+             ===================================================== -->
+        <Border Grid.Row="2" 
+                BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#1E1E1E}"
+                HeightRequest="30">
+            <Label Text="Bereit"
+                   FontSize="12"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Border>
+
+    </Grid>
 </ContentPage>
