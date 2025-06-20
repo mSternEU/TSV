@@ -78,18 +78,6 @@
                        HeightRequest="185"
                        Aspect="AspectFit" />
 
-                <!-- <Label x:Name="CounterLabel"
-                       Text="{Binding Text}"
-                       FontSize="18"
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center" />
-
-                <Button x:Name="CounterBtn"
-                        Text="Click me"
-                        FontAttributes="Bold"
-                        Command="{Binding ClickCommand}"
-                        HorizontalOptions="Fill" />
-                -->
 
                 <!-- Separator -->
                 <BoxView HeightRequest="1" 
@@ -156,7 +144,7 @@
                     </Border>
                 </Grid>
 
-                <!-- Debug Info (kannst du später entfernen) -->
+                <!-- Debug Info (ehemals für den Demo-Clicker-Button xD) -->
                 <Label Text="{Binding Count, StringFormat='Debug: Count = {0}'}"
                        FontSize="12"
                        TextColor="Gray"
