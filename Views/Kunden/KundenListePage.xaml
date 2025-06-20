@@ -149,11 +149,29 @@
         <Border Grid.Row="3"
                 BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
                 Padding="15,8">
-            <Grid ColumnDefinitions="*,Auto,Auto">
-                <Label Grid.Column="0" Text="{Binding FilteredKunden.Count, StringFormat='{0} Kunden'}" />
-                <Label Grid.Column="1" Text="{Binding StatusMessage}" />
-                <Button Grid.Column="2" Text="🔄" Command="{Binding RefreshCommand}" />
-            </Grid>
+            <StackLayout Orientation="Horizontal" Spacing="10">
+            
+            <!-- Kunden Count -->
+                <Label Text="{Binding FilteredKunden.Count, StringFormat='{0} Kunden'}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       VerticalOptions="Center" />
+
+                <!-- Loading Status -->
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       VerticalOptions="Center" />
+
+                <!-- Refresh Button -->
+                <Button Text="🔄"
+                        Command="{Binding RefreshCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                        FontSize="16"
+                        WidthRequest="40"
+                        HeightRequest="30" />
+            </StackLayout>
         </Border>
     </Grid>
 </ContentPage>
