@@ -2,6 +2,8 @@
 using TSV.Services.Navigation;
 using TSV.ViewModels;
 using TSV.ViewModels.Base;
+using TSV.Services.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace TSV
 {
@@ -24,6 +26,20 @@ namespace TSV
 
             // Navigation Service (Singleton - eine Instanz für die ganze App)
             builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+            // =====================================================
+            // DATABASE SERVICES (Entity Framework)
+            // =====================================================
+
+            // Database Context (Scoped - neue Instanz pro Request)
+            builder.Services.AddDbContext<TsvDbContext>(options =>
+            {
+                // TODO: Connection String anpassen!
+                options.UseSqlServer("Server=L12296\\SQLEXPRESS;Database=TSV;Trusted_Connection=true;");
+            });
+
+            // Database Service (Scoped - arbeitet mit DbContext)
+            builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 
             // =====================================================
             // VIEWMODELS REGISTRIERUNG
