@@ -1,4 +1,5 @@
-﻿<ContentPage x:Class="TSV.MainPage"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="TSV.MainPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="{Binding CurrentPageTitle}">
@@ -77,7 +78,7 @@
                        HeightRequest="185"
                        Aspect="AspectFit" />
 
-                <Label x:Name="CounterLabel"
+                <!-- <Label x:Name="CounterLabel"
                        Text="{Binding Text}"
                        FontSize="18"
                        FontAttributes="Bold"
@@ -88,6 +89,7 @@
                         FontAttributes="Bold"
                         Command="{Binding ClickCommand}"
                         HorizontalOptions="Fill" />
+                -->
 
                 <!-- Separator -->
                 <BoxView HeightRequest="1" 
@@ -119,7 +121,7 @@
 
                     <!-- Kurse Button -->
                     <Border Grid.Row="0" Grid.Column="1"
-                            BackgroundColor="{AppThemeBinding Light=#FF6B6B, Dark=#FF8E8E}"
+                            BackgroundColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
                             StrokeShape="RoundRectangle 15">
                         <Button Text="💃 Kurse"
                                 Command="{Binding NavigateToKurseCommand}"
@@ -131,7 +133,7 @@
 
                     <!-- Team Button -->
                     <Border Grid.Row="1" Grid.Column="0"
-                            BackgroundColor="{AppThemeBinding Light=#4ECDC4, Dark=#6EEEE6}"
+                            BackgroundColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
                             StrokeShape="RoundRectangle 15">
                         <Button Text="🕺 Team"
                                 Command="{Binding NavigateToTeamCommand}"
@@ -143,7 +145,7 @@
 
                     <!-- Statistik Button -->
                     <Border Grid.Row="1" Grid.Column="1"
-                            BackgroundColor="{AppThemeBinding Light=#45B7D1, Dark=#67C9E3}"
+                            BackgroundColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
                             StrokeShape="RoundRectangle 15">
                         <Button Text="📊 Statistik"
                                 Command="{Binding NavigateToStatistikCommand}"
