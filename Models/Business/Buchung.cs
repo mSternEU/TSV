@@ -1,127 +1,163 @@
-﻿using TSV.Models.Base;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TSV.Models.Base;
 
-namespace TSV.Models.Business
+[Table("buchung")]
+public partial class Buchung : ModelBase
 {
-    [Table("buchung")]
-    public class Buchung : ModelBase
+    private int _bid;
+    private DateTime _bDatum;
+    private int _kursId;
+    private int _p1;
+    private int _p1Role;
+    private int? _p2;
+    private int? _p2Role;
+    private int _bezahlt;
+    private DateTime _createdAt;
+    private bool _istAktiv;
+    private DateTime? _geloeschtAm;
+    private int? _geloeschtVon;
+
+    // Navigation Properties
+    private Kunde _kundeP1;
+    private Kunde _kundeP2;
+    private Kurs _kurs;
+    private KundeRolle _p1Rolle;
+    private KundeRolle _p2Rolle;
+
+    [Key]
+    [Column("bid")]
+    public int Bid
     {
-        private int _id;
-        private int _kundeId;
-        private int _kursId;
-        private DateTime _buchungsdatum;
-        private decimal? _bezahltBetrag;
-        private DateTime? _bezahltAm;
-        private string _notizen;
-        private bool _storniert;
-        private DateTime? _storniertAm;
+        get => _bid;
+        set => SetProperty(ref _bid, value);
+    }
 
-        // Navigation Properties
-        private Kunde _kunde;
-        private Kurs _kurs;
+    [Required]
+    [Column("b_datum")]
+    public DateTime BDatum
+    {
+        get => _bDatum;
+        set => SetProperty(ref _bDatum, value);
+    }
 
-        [Key]
-        [Column("id")]
-        public int Id
+    [Required]
+    [Column("kurs_id")]
+    public int KursId
+    {
+        get => _kursId;
+        set => SetProperty(ref _kursId, value);
+    }
+
+    [Required]
+    [Column("p1")]
+    public int P1
+    {
+        get => _p1;
+        set => SetProperty(ref _p1, value);
+    }
+
+    [Required]
+    [Column("p1_role")]
+    public int P1Role
+    {
+        get => _p1Role;
+        set => SetProperty(ref _p1Role, value);
+    }
+
+    [Column("p2")]
+    public int? P2
+    {
+        get => _p2;
+        set => SetProperty(ref _p2, value);
+    }
+
+    [Column("p2_role")]
+    public int? P2Role
+    {
+        get => _p2Role;
+        set => SetProperty(ref _p2Role, value);
+    }
+
+    [Column("bezahlt")]
+    public int Bezahlt
+    {
+        get => _bezahlt;
+        set => SetProperty(ref _bezahlt, value);
+    }
+
+    [Column("created_at")]
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set => SetProperty(ref _createdAt, value);
+    }
+
+    [Column("ist_aktiv")]
+    public bool IstAktiv
+    {
+        get => _istAktiv;
+        set => SetProperty(ref _istAktiv, value);
+    }
+
+    [Column("geloescht_am")]
+    public DateTime? GeloeschtAm
+    {
+        get => _geloeschtAm;
+        set => SetProperty(ref _geloeschtAm, value);
+    }
+
+    [Column("geloescht_von")]
+    public int? GeloeschtVon
+    {
+        get => _geloeschtVon;
+        set => SetProperty(ref _geloeschtVon, value);
+    }
+
+    // Navigation Properties
+    [ForeignKey("P1")]
+    public Kunde KundeP1
+    {
+        get => _kundeP1;
+        set => SetProperty(ref _kundeP1, value);
+    }
+
+    [ForeignKey("P2")]
+    public Kunde KundeP2
+    {
+        get => _kundeP2;
+        set => SetProperty(ref _kundeP2, value);
+    }
+
+    [ForeignKey("KursId")]
+    public Kurs Kurs
+    {
+        get => _kurs;
+        set => SetProperty(ref _kurs, value);
+    }
+
+    // Computed Properties
+    [NotMapped]
+    public string BezahlStatus
+    {
+        get
         {
-            get => _id;
-            set => SetProperty(ref _id, value);
+            return Bezahlt switch
+            {
+                0 => "Offen",
+                1 => "P1 bezahlt",
+                2 => "P2 bezahlt",
+                3 => "Vollständig bezahlt",
+                _ => "Unbekannt"
+            };
         }
+    }
 
-        [Required]
-        [Column("kunde_id")]
-        public int KundeId
-        {
-            get => _kundeId;
-            set => SetProperty(ref _kundeId, value);
-        }
-
-        [Required]
-        [Column("kurs_id")]
-        public int KursId
-        {
-            get => _kursId;
-            set => SetProperty(ref _kursId, value);
-        }
-
-        [Required]
-        [Column("buchungsdatum")]
-        public DateTime Buchungsdatum
-        {
-            get => _buchungsdatum;
-            set => SetProperty(ref _buchungsdatum, value);
-        }
-
-        [Column("bezahlt_betrag", TypeName = "decimal(8,2)")]
-        public decimal? BezahltBetrag
-        {
-            get => _bezahltBetrag;
-            set => SetProperty(ref _bezahltBetrag, value);
-        }
-
-        [Column("bezahlt_am")]
-        public DateTime? BezahltAm
-        {
-            get => _bezahltAm;
-            set => SetProperty(ref _bezahltAm, value);
-        }
-
-        [Column("notizen")]
-        public string Notizen
-        {
-            get => _notizen;
-            set => SetProperty(ref _notizen, value);
-        }
-
-        [Column("storniert")]
-        public bool Storniert
-        {
-            get => _storniert;
-            set => SetProperty(ref _storniert, value);
-        }
-
-        [Column("storniert_am")]
-        public DateTime? StorniertAm
-        {
-            get => _storniertAm;
-            set => SetProperty(ref _storniertAm, value);
-        }
-
-        // Navigation Properties
-        [ForeignKey("KundeId")]
-        public Kunde Kunde
-        {
-            get => _kunde;
-            set => SetProperty(ref _kunde, value);
-        }
-
-        [ForeignKey("KursId")]
-        public Kurs Kurs
-        {
-            get => _kurs;
-            set => SetProperty(ref _kurs, value);
-        }
-
-        // Computed Properties für UI
-        [NotMapped]
-        public bool IstBezahlt => BezahltBetrag.HasValue && BezahltAm.HasValue;
-
-        [NotMapped]
-        public decimal OffenerBetrag => (Kurs?.Preis ?? 0) - (BezahltBetrag ?? 0);
-
-        [NotMapped]
-        public string BezahlStatus => Storniert ? "Storniert" :
-                                     IstBezahlt ? "Bezahlt" :
-                                     "Offen";
-
-        [NotMapped]
-        public string DisplayText => $"{Kunde?.VollName} → {Kurs?.KursName} ({BezahlStatus})";
-
-        // Konstruktor
-        public Buchung()
-        {
-            Buchungsdatum = DateTime.Now;
-        }
+    // Konstruktor
+    public Buchung()
+    {
+        CreatedAt = DateTime.Now;
+        IstAktiv = true;
+        Bezahlt = 0;
     }
 }

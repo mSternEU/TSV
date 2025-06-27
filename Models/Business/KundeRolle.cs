@@ -1,40 +1,30 @@
-﻿using TSV.Models.Base;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TSV.Models.Base;
 
-namespace TSV.Models.Business
+[Table("kunde_rolle")]
+public partial class KundeRolle : ModelBase
 {
-    [Table("kunde_rolle")]
-    public class KundeRolle : ModelBase
+    private int _id;
+    private string _bezeichnung;
+
+    [Key]
+    [Column("id")]
+    public int Id
     {
-        private int _id;
-        private string _rolleName;
-
-        // Navigation Properties
-        private List<Kunde> _kunden;
-
-        [Key]
-        [Column("id")]
-        public int Id
-        {
-            get => _id;
-            set => SetProperty(ref _id, value);
-        }
-
-        [Required]
-        [MaxLength(100)]
-        [Column("rolle_name")]
-        public string RolleName
-        {
-            get => _rolleName;
-            set => SetProperty(ref _rolleName, value);
-        }
-
-        // Navigation Properties
-        public List<Kunde> Kunden
-        {
-            get => _kunden ??= new List<Kunde>();
-            set => SetProperty(ref _kunden, value);
-        }
+        get => _id;
+        set => SetProperty(ref _id, value);
     }
+
+    [Required]
+    [MaxLength(100)]
+    [Column("bezeichnung")]
+    public string Bezeichnung
+    {
+        get => _bezeichnung;
+        set => SetProperty(ref _bezeichnung, value);
+    }
+
+    // Navigation Properties
+    public List<Kunde> Kunden { get; set; } = new List<Kunde>();
 }

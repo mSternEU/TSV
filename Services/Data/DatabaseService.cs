@@ -20,7 +20,7 @@ namespace TSV.Services.Data
         public async Task<List<Kunde>> GetKundenAsync()
         {
             return await _context.Kunden
-                .Include(k => k.KundeRolle)
+                //.Include(k => k.KundeRolle)
                 .Include(k => k.Buchungen)
                 .ThenInclude(b => b.Kurs)
                 .OrderBy(k => k.Nachname)
@@ -31,7 +31,7 @@ namespace TSV.Services.Data
         public async Task<Kunde> GetKundeByIdAsync(int id)
         {
             return await _context.Kunden
-                .Include(k => k.KundeRolle)
+                //.Include(k => k.KundeRolle)
                 .Include(k => k.Buchungen)
                 .ThenInclude(b => b.Kurs)
                 .FirstOrDefaultAsync(k => k.Id == id);
@@ -69,7 +69,7 @@ namespace TSV.Services.Data
 
             var term = searchTerm.ToLower();
             return await _context.Kunden
-                .Include(k => k.KundeRolle)
+                //.Include(k => k.KundeRolle)
                 .Where(k => k.Vorname.ToLower().Contains(term) ||
                            k.Nachname.ToLower().Contains(term) ||
                            k.Email.ToLower().Contains(term))
@@ -276,10 +276,35 @@ namespace TSV.Services.Data
         {
             try
             {
-                return await _context.Database.CanConnectAsync();
+                // DEBUG: Connection String loggen
+                var connectionString = _context.Database.GetConnectionString();
+                System.Diagnostics.Debug.WriteLine($"🔍 Teste Connection String: {connectionString}");
+
+                // Verbindung öffnen und testen
+                System.Diagnostics.Debug.WriteLine("🔗 Öffne Datenbankverbindung...");
+
+                await _context.Database.OpenConnectionAsync();
+
+                System.Diagnostics.Debug.WriteLine("✅ Datenbankverbindung erfolgreich!");
+
+                await _context.Database.CloseConnectionAsync();
+
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
+                // DETAILLIERTE Error-Info
+                System.Diagnostics.Debug.WriteLine($"❌ Datenbankverbindung fehlgeschlagen!");
+                System.Diagnostics.Debug.WriteLine($"❌ Exception Type: {ex.GetType().Name}");
+                System.Diagnostics.Debug.WriteLine($"❌ Message: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack Trace: {ex.StackTrace}");
+
+                // Inner Exception prüfen
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ Inner Exception: {ex.InnerException.Message}");
+                }
+
                 return false;
             }
         }

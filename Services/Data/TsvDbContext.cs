@@ -9,12 +9,23 @@ namespace TSV.Services.Data
         {
         }
 
-        // DbSets für alle Business Models
+        // =====================================================
+        // DBSETS - Alle Business Models
+        // =====================================================
+
+        // Haupttabellen
         public DbSet<Kunde> Kunden { get; set; }
-        public DbSet<KundeRolle> KundeRollen { get; set; }
         public DbSet<Team> TeamMitglieder { get; set; }
-        public DbSet<Kurs> Kurse { get; set; }
         public DbSet<Buchung> Buchungen { get; set; }
+
+        // Lookup-Tabellen
+        public DbSet<KundeRolle> KundeRollen { get; set; }
+        public DbSet<Geschlecht> Geschlechter { get; set; }
+        public DbSet<Zahlweise> Zahlweisen { get; set; }
+        public DbSet<MitarbeiterFunktion> MitarbeiterFunktionen { get; set; }
+
+        // Kurs-Tabellen (für später - können wir erstmal auskommentieren)
+        // public DbSet<Kurs> Kurse { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,68 +35,83 @@ namespace TSV.Services.Data
             // RELATIONSHIPS KONFIGURATION
             // =====================================================
 
-            // Kunde → KundeRolle (Optional)
+            // Kunde → Geschlecht (Optional)
             modelBuilder.Entity<Kunde>()
-                .HasOne(k => k.KundeRolle)
-                .WithMany(kr => kr.Kunden)
-                .HasForeignKey(k => k.KundeRolleId)
+                .HasOne(k => k.Geschlecht)
+                .WithMany()
+                .HasForeignKey(k => k.GeschlechtId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Kunde → Zahlweise (Optional)
+            modelBuilder.Entity<Kunde>()
+                .HasOne(k => k.Zahlweise)
+                .WithMany()
+                .HasForeignKey(k => k.ZahlweiseId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             // Kunde → Buchungen (One-to-Many)
             modelBuilder.Entity<Kunde>()
                 .HasMany(k => k.Buchungen)
-                .WithOne(b => b.Kunde)
-                .HasForeignKey(b => b.KundeId)
+                .WithOne(b => b.KundeP1)
+                .HasForeignKey(b => b.P1)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Kurs → Team/Lehrer (Optional)
-            modelBuilder.Entity<Kurs>()
-                .HasOne(k => k.Lehrer)
-                .WithMany(t => t.Kurse)
-                .HasForeignKey(k => k.LehrerId)
+            // Team → MitarbeiterFunktion (Optional)
+            modelBuilder.Entity<Team>()
+                .HasOne(t => t.MitarbeiterFunktion)
+                .WithMany()
+                .HasForeignKey(t => t.Funktion)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Kurs → Buchungen (One-to-Many)
-            modelBuilder.Entity<Kurs>()
-                .HasMany(k => k.Buchungen)
-                .WithOne(b => b.Kurs)
-                .HasForeignKey(b => b.KursId)
+            // Buchung → Kunde P1 (Required)
+            modelBuilder.Entity<Buchung>()
+                .HasOne(b => b.KundeP1)
+                .WithMany(k => k.Buchungen)
+                .HasForeignKey(b => b.P1)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Buchung → Kunde & Kurs (bereits über Foreign Keys definiert)
+            // Buchung → Kunde P2 (Optional)
+            modelBuilder.Entity<Buchung>()
+                .HasOne(b => b.KundeP2)
+                .WithMany()
+                .HasForeignKey(b => b.P2)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // =====================================================
-            // SEEDING (Beispieldaten für Entwicklung)
+            // KEINE SEED-DATEN (wie besprochen)
             // =====================================================
 
-            // Kunde Rollen
-            modelBuilder.Entity<KundeRolle>().HasData(
-                new KundeRolle { Id = 1, RolleName = "Standard" },
-                new KundeRolle { Id = 2, RolleName = "Student" },
-                new KundeRolle { Id = 3, RolleName = "Senior" }
-            );
+            // Erstmal leer lassen - Daten kommen über UI!
+        }
 
-            // Beispiel Team-Mitglieder
-            modelBuilder.Entity<Team>().HasData(
-                new Team
-                {
-                    Id = 1,
-                    Vorname = "Maria",
-                    Nachname = "Gonzalez",
-                    Email = "maria@tanzschule.de",
-                    Position = "Hauptlehrerin",
-                    Eingestellt = new DateTime(2020, 1, 15)
-                },
-                new Team
-                {
-                    Id = 2,
-                    Vorname = "Carlos",
-                    Nachname = "Rodriguez",
-                    Email = "carlos@tanzschule.de",
-                    Position = "Tanzlehrer",
-                    Eingestellt = new DateTime(2021, 3, 10)
-                }
-            );
+        // =====================================================
+        // HELPER METHODS (Optional)
+        // =====================================================
+
+        public async Task<bool> CanConnectAsync()
+        {
+            try
+            {
+                return await Database.CanConnectAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                // Datenbank erstellen falls nicht vorhanden
+                await Database.EnsureCreatedAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Database initialization failed: {ex.Message}");
+                throw;
+            }
         }
     }
 }

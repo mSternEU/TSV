@@ -1,106 +1,119 @@
-﻿using TSV.Models.Base;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TSV.Models.Base;
 
-namespace TSV.Models.Business
+[Table("team")]
+public partial class Team : ModelBase
 {
-    [Table("team")]
-    public class Team : ModelBase
+    private int _id;
+    private string _vorname;
+    private string _nachname;
+    private string _telefon;
+    private int _funktion;
+    private DateTime _createdAt;
+    private bool _istAktiv;
+    private DateTime? _geloeschtAm;
+    private int? _geloeschtVon;
+
+    // Navigation Properties
+    private MitarbeiterFunktion _mitarbeiterFunktion;
+    private List<Kurs> _kurse;
+
+    [Key]
+    [Column("id")]
+    public int Id
     {
-        private int _id;
-        private string _vorname;
-        private string _nachname;
-        private string _email;
-        private string _telefon;
-        private string _position;
-        private decimal? _gehalt;
-        private DateTime _eingestellt;
+        get => _id;
+        set => SetProperty(ref _id, value);
+    }
 
-        // Navigation Properties
-        private List<Kurs> _kurse;
+    [Required]
+    [MaxLength(100)]
+    [Column("vorname")]
+    public string Vorname
+    {
+        get => _vorname;
+        set => SetProperty(ref _vorname, value);
+    }
 
-        [Key]
-        [Column("id")]
-        public int Id
-        {
-            get => _id;
-            set => SetProperty(ref _id, value);
-        }
+    [Required]
+    [MaxLength(100)]
+    [Column("nachname")]
+    public string Nachname
+    {
+        get => _nachname;
+        set => SetProperty(ref _nachname, value);
+    }
 
-        [Required]
-        [MaxLength(100)]
-        [Column("vorname")]
-        public string Vorname
-        {
-            get => _vorname;
-            set => SetProperty(ref _vorname, value);
-        }
+    [MaxLength(50)]
+    [Column("telefon")]
+    public string Telefon
+    {
+        get => _telefon;
+        set => SetProperty(ref _telefon, value);
+    }
 
-        [Required]
-        [MaxLength(100)]
-        [Column("nachname")]
-        public string Nachname
-        {
-            get => _nachname;
-            set => SetProperty(ref _nachname, value);
-        }
+    [Required]
+    [Column("funktion")]
+    public int Funktion
+    {
+        get => _funktion;
+        set => SetProperty(ref _funktion, value);
+    }
 
-        [MaxLength(200)]
-        [Column("email")]
-        public string Email
-        {
-            get => _email;
-            set => SetProperty(ref _email, value);
-        }
+    [Column("created_at")]
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set => SetProperty(ref _createdAt, value);
+    }
 
-        [MaxLength(50)]
-        [Column("telefon")]
-        public string Telefon
-        {
-            get => _telefon;
-            set => SetProperty(ref _telefon, value);
-        }
+    [Column("ist_aktiv")]
+    public bool IstAktiv
+    {
+        get => _istAktiv;
+        set => SetProperty(ref _istAktiv, value);
+    }
 
-        [MaxLength(100)]
-        [Column("position")]
-        public string Position
-        {
-            get => _position;
-            set => SetProperty(ref _position, value);
-        }
+    [Column("geloescht_am")]
+    public DateTime? GeloeschtAm
+    {
+        get => _geloeschtAm;
+        set => SetProperty(ref _geloeschtAm, value);
+    }
 
-        [Column("gehalt", TypeName = "decimal(10,2)")]
-        public decimal? Gehalt
-        {
-            get => _gehalt;
-            set => SetProperty(ref _gehalt, value);
-        }
+    [Column("geloescht_von")]
+    public int? GeloeschtVon
+    {
+        get => _geloeschtVon;
+        set => SetProperty(ref _geloeschtVon, value);
+    }
 
-        [Column("eingestellt")]
-        public DateTime Eingestellt
-        {
-            get => _eingestellt;
-            set => SetProperty(ref _eingestellt, value);
-        }
+    // Navigation Properties
+    [ForeignKey("Funktion")]
+    public MitarbeiterFunktion MitarbeiterFunktion
+    {
+        get => _mitarbeiterFunktion;
+        set => SetProperty(ref _mitarbeiterFunktion, value);
+    }
 
-        // Navigation Properties
-        public List<Kurs> Kurse
-        {
-            get => _kurse ??= new List<Kurs>();
-            set => SetProperty(ref _kurse, value);
-        }
+    public List<Kurs> Kurse
+    {
+        get => _kurse ??= new List<Kurs>();
+        set => SetProperty(ref _kurse, value);
+    }
 
-        // Computed Properties für UI
-        [NotMapped]
-        public string VollName => $"{Vorname} {Nachname}";
+    // Computed Properties
+    [NotMapped]
+    public string VollName => $"{Vorname} {Nachname}";
 
-        [NotMapped]
-        public string DisplayText => $"{VollName} ({Position})";
+    [NotMapped]
+    public string DisplayName => $"{VollName} ({MitarbeiterFunktion?.Bezeichnung})";
 
-        // Konstruktor
-        public Team()
-        {
-            Eingestellt = DateTime.Now;
-        }
+    // Konstruktor
+    public Team()
+    {
+        CreatedAt = DateTime.Now;
+        IstAktiv = true;
     }
 }

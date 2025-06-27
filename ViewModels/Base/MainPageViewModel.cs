@@ -77,7 +77,7 @@ namespace TSV.ViewModels
 
             // Tanzschul-Navigation Commands (für später)
             NavigateToKundenCommand = new Command(async () =>
-                await _navigationService.NavigateToAsync("kunden"));
+                await _navigationService.NavigateToAsync("KundenListe"));
             NavigateToKurseCommand = new Command(async () =>
                 await _navigationService.NavigateToAsync("kurse"));
             NavigateToTeamCommand = new Command(async () =>

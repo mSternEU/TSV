@@ -1,75 +1,88 @@
 ﻿using Microsoft.Extensions.Logging;
-using TSV.Services.Navigation;
-using TSV.ViewModels;
-using TSV.ViewModels.Base;
-using TSV.Services.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace TSV
+// Base Infrastructure
+using TSV.ViewModels.Base;
+using TSV.Services.Navigation;
+using TSV.Services.Data;
+
+// Kunden Module
+using TSV.Views.Kunden;
+using TSV.ViewModels.Kunden;
+using TSV.ViewModels;
+
+namespace TSV;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-
-            // =====================================================
-            // SERVICES REGISTRIERUNG (wie in deinem WPF-Template)
-            // =====================================================
-
-            // Navigation Service (Singleton - eine Instanz für die ganze App)
-            builder.Services.AddSingleton<INavigationService, NavigationService>();
-
-            // =====================================================
-            // DATABASE SERVICES (Entity Framework)
-            // =====================================================
-
-            // Database Context (Scoped - neue Instanz pro Request)
-            builder.Services.AddDbContext<TsvDbContext>(options =>
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
             {
-                // TODO: Connection String anpassen!
-                options.UseSqlServer("Server=L12296\\SQLEXPRESS;Database=TSV;Trusted_Connection=true;");
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-            // Database Service (Scoped - arbeitet mit DbContext)
-            builder.Services.AddScoped<IDatabaseService, DatabaseService>();
-
-            // =====================================================
-            // VIEWMODELS REGISTRIERUNG
-            // =====================================================
-
-            // Main ViewModels (Transient - neue Instanz bei jeder Anfrage)
-            builder.Services.AddTransient<MainPageViewModel>();
-
-            // Hier kommen später die anderen ViewModels dazu:
-            // builder.Services.AddTransient<KundenViewModel>();
-            // builder.Services.AddTransient<KurseViewModel>();
-            // builder.Services.AddTransient<TeamViewModel>();
-            // builder.Services.AddTransient<StatistikViewModel>();
-
-            // =====================================================
-            // PAGES REGISTRIERUNG (für Dependency Injection)
-            // =====================================================
-
-            // Main Page (bereits vorhanden)
-            builder.Services.AddTransient<MainPage>();
-
-            // Hier kommen später die anderen Pages dazu:
-            // builder.Services.AddTransient<KundenPage>();
-            // builder.Services.AddTransient<KursePage>();
 
 #if DEBUG
-            builder.Logging.AddDebug();
+        builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
-            return builder.Build();
-        }
+        // =====================================================
+        // DATABASE SERVICES
+        // =====================================================
+
+        // Connection String für SQL Server Express
+        var connectionString = "Server=L12296\\SQLEXPRESS;Database=TSV;Integrated Security=true;TrustServerCertificate=true;";
+      
+
+        // Entity Framework registrieren
+        builder.Services.AddDbContext<TsvDbContext>(options =>
+            options.UseSqlServer(connectionString));
+
+        // Database Service (Repository Pattern)
+        builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+
+        // =====================================================
+        // NAVIGATION SERVICE
+        // =====================================================
+        builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+        // =====================================================
+        // PAGES & VIEWMODELS - Hauptseiten
+        // =====================================================
+
+        // Main Page
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<MainPageViewModel>();
+
+        // =====================================================
+        // KUNDEN MODULE - Pages & ViewModels
+        // =====================================================
+
+        // Kunden Liste
+        builder.Services.AddTransient<KundenListePage>();
+        builder.Services.AddTransient<KundenListeViewModel>();
+
+        // Kunden Detail (für später)
+        //builder.Services.AddTransient<KundenDetailPage>();
+        //builder.Services.AddTransient<KundenDetailViewModel>();
+
+        // =====================================================
+        // ROUTING CONFIGURATION
+        // =====================================================
+
+        // Navigation Routes registrieren
+        Routing.RegisterRoute("KundenListe", typeof(KundenListePage));
+        //Routing.RegisterRoute("KundenDetail", typeof(KundenDetailPage));
+
+        // Weitere Routes (für später)
+        // Routing.RegisterRoute("KurseListe", typeof(KurseListePage));
+        // Routing.RegisterRoute("TeamListe", typeof(TeamListePage));
+        // Routing.RegisterRoute("Statistik", typeof(StatistikPage));
+
+        return builder.Build();
     }
 }
