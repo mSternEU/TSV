@@ -72,7 +72,7 @@ namespace TSV.Services.Data
                 //.Include(k => k.KundeRolle)
                 .Where(k => k.Vorname.ToLower().Contains(term) ||
                            k.Nachname.ToLower().Contains(term) ||
-                           k.Email.ToLower().Contains(term))
+                           k.Mail.ToLower().Contains(term))
                 .OrderBy(k => k.Nachname)
                 .ToListAsync();
         }
@@ -197,25 +197,27 @@ namespace TSV.Services.Data
         public async Task<List<Buchung>> GetBuchungenAsync()
         {
             return await _context.Buchungen
-                .Include(b => b.Kunde)
+                .Include(b => b.KundeP1)
+                .Include(b => b.KundeP2)
                 .Include(b => b.Kurs)
                 .ThenInclude(k => k.Lehrer)
-                .OrderByDescending(b => b.Buchungsdatum)
+                .OrderByDescending(b => b.BDatum)
                 .ToListAsync();
         }
 
         public async Task<Buchung> GetBuchungByIdAsync(int id)
         {
             return await _context.Buchungen
-                .Include(b => b.Kunde)
+                .Include(b => b.KundeP1)
+                .Include(b => b.KundeP2)
                 .Include(b => b.Kurs)
                 .ThenInclude(k => k.Lehrer)
-                .FirstOrDefaultAsync(b => b.Id == id);
+                .FirstOrDefaultAsync(b => b.Bid == id);
         }
 
         public async Task<Buchung> CreateBuchungAsync(Buchung buchung)
         {
-            buchung.Buchungsdatum = DateTime.Now;
+            buchung.BDatum = DateTime.Now;
             _context.Buchungen.Add(buchung);
             await _context.SaveChangesAsync();
             return buchung;
