@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TSV.Models.Base;
+using TSV.Models.Business;
 
 [Table("buchung")]
 public partial class Buchung : ModelBase
@@ -13,7 +14,7 @@ public partial class Buchung : ModelBase
     private int? _p2;
     private int? _p2Role;
     private int _bezahlt;
-    private DateTime _createdAt;
+    private DateTime _erstelltAm;
     private bool _istAktiv;
     private DateTime? _geloeschtAm;
     private int? _geloeschtVon;
@@ -87,10 +88,10 @@ public partial class Buchung : ModelBase
     }
 
     [Column("created_at")]
-    public DateTime CreatedAt
+    public DateTime ErstelltAm
     {
-        get => _createdAt;
-        set => SetProperty(ref _createdAt, value);
+        get => _erstelltAm;
+        set => SetProperty(ref _erstelltAm, value);
     }
 
     [Column("ist_aktiv")]
@@ -156,7 +157,7 @@ public partial class Buchung : ModelBase
     // Konstruktor
     public Buchung()
     {
-        CreatedAt = DateTime.Now;
+        ErstelltAm = DateTime.Now;
         IstAktiv = true;
         Bezahlt = 0;
     }

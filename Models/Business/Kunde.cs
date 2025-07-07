@@ -20,7 +20,7 @@ namespace TSV.Models.Business
         private int? _zahlweiseId;
         private int? _koerpergroesse;
         private string _notes;
-        private DateTime _createdAt;
+        private DateTime _erstelltAm;
         private bool _istAktiv;
         private DateTime? _geloeschtAm;
         private int? _geloeschtVon;
@@ -136,10 +136,10 @@ namespace TSV.Models.Business
         }
 
         [Column("created_at")]
-        public DateTime CreatedAt
+        public DateTime ErstelltAm
         {
-            get => _createdAt;
-            set => SetProperty(ref _createdAt, value);
+            get => _erstelltAm;
+            set => SetProperty(ref _erstelltAm, value);
         }
 
         [Column("ist_aktiv")]
@@ -200,7 +200,7 @@ namespace TSV.Models.Business
         // Konstruktor
         public Kunde()
         {
-            CreatedAt = DateTime.Now;
+            ErstelltAm = DateTime.Now;
             IstAktiv = true;
         }
     }

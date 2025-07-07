@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TSV.Models.Base;
+using TSV.Models.Business;
 
 [Table("kunde_rolle")]
 public partial class KundeRolle : ModelBase

@@ -25,7 +25,7 @@ namespace TSV.Services.Data
         public DbSet<MitarbeiterFunktion> MitarbeiterFunktionen { get; set; }
 
         // Kurs-Tabellen (für später - können wir erstmal auskommentieren)
-        // public DbSet<Kurs> Kurse { get; set; }
+        public DbSet<Kurs> Kurse { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

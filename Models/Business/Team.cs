@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TSV.Models.Base;
+using TSV.Models.Business;
 
 [Table("team")]
 public partial class Team : ModelBase
@@ -10,7 +11,7 @@ public partial class Team : ModelBase
     private string _nachname;
     private string _telefon;
     private int _funktion;
-    private DateTime _createdAt;
+    private DateTime _erstelltAm;
     private bool _istAktiv;
     private DateTime? _geloeschtAm;
     private int? _geloeschtVon;
@@ -62,10 +63,10 @@ public partial class Team : ModelBase
     }
 
     [Column("created_at")]
-    public DateTime CreatedAt
+    public DateTime ErstelltAm
     {
-        get => _createdAt;
-        set => SetProperty(ref _createdAt, value);
+        get => _erstelltAm;
+        set => SetProperty(ref _erstelltAm, value);
     }
 
     [Column("ist_aktiv")]
@@ -113,7 +114,7 @@ public partial class Team : ModelBase
     // Konstruktor
     public Team()
     {
-        CreatedAt = DateTime.Now;
+        ErstelltAm = DateTime.Now;
         IstAktiv = true;
     }
 }

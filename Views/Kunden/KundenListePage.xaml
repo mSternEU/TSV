@@ -104,7 +104,7 @@
                                     StrokeShape="RoundRectangle 10"
                                     Padding="8,3"
                                     VerticalOptions="Center">
-                                <Label Text="{Binding KundeRolle.RolleName}"
+                                <Label Text="{Binding KundeRolle.Bezeichnung}"
                                        FontSize="11"
                                        TextColor="White"
                                        FontAttributes="Bold" />

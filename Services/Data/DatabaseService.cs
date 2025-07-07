@@ -86,7 +86,7 @@ namespace TSV.Services.Data
             return await _context.Kurse
                 .Include(k => k.Lehrer)
                 .Include(k => k.Buchungen)
-                .ThenInclude(b => b.Kunde)
+                .ThenInclude(b => b.KundeP1)
                 .OrderBy(k => k.StartDatum)
                 .ToListAsync();
         }
@@ -96,7 +96,7 @@ namespace TSV.Services.Data
             return await _context.Kurse
                 .Include(k => k.Lehrer)
                 .Include(k => k.Buchungen)
-                .ThenInclude(b => b.Kunde)
+                .ThenInclude(b => b.KundeP1)
                 .FirstOrDefaultAsync(k => k.Id == id);
         }
 
@@ -167,7 +167,7 @@ namespace TSV.Services.Data
 
         public async Task<Team> CreateTeamMitgliedAsync(Team teamMitglied)
         {
-            teamMitglied.Eingestellt = DateTime.Now;
+            teamMitglied.ErstelltAm = DateTime.Now;
             _context.TeamMitglieder.Add(teamMitglied);
             await _context.SaveChangesAsync();
             return teamMitglied;
@@ -217,7 +217,8 @@ namespace TSV.Services.Data
 
         public async Task<Buchung> CreateBuchungAsync(Buchung buchung)
         {
-            buchung.BDatum = DateTime.Now;
+            buchung.BDatum = DateTime.Now;      // Buchungsdatum
+            buchung.ErstelltAm = DateTime.Now;  // Erstellungsdatum
             _context.Buchungen.Add(buchung);
             await _context.SaveChangesAsync();
             return buchung;
@@ -243,19 +244,22 @@ namespace TSV.Services.Data
         public async Task<List<Buchung>> GetBuchungenByKundeAsync(int kundeId)
         {
             return await _context.Buchungen
+                .Include(b => b.KundeP1)
+                .Include(b => b.KundeP2)
                 .Include(b => b.Kurs)
                 .ThenInclude(k => k.Lehrer)
-                .Where(b => b.KundeId == kundeId)
-                .OrderByDescending(b => b.Buchungsdatum)
+                .Where(b => b.P1 == kundeId || b.P2 == kundeId)
+                .OrderByDescending(b => b.BDatum)
                 .ToListAsync();
         }
 
         public async Task<List<Buchung>> GetBuchungenByKursAsync(int kursId)
         {
             return await _context.Buchungen
-                .Include(b => b.Kunde)
+                .Include(b => b.KundeP1)
+                .Include(b => b.KundeP2)
                 .Where(b => b.KursId == kursId)
-                .OrderBy(b => b.Kunde.Nachname)
+                .OrderBy(b => b.KundeP1.Nachname)
                 .ToListAsync();
         }
 
@@ -266,7 +270,7 @@ namespace TSV.Services.Data
         public async Task<List<KundeRolle>> GetKundeRollenAsync()
         {
             return await _context.KundeRollen
-                .OrderBy(kr => kr.RolleName)
+                .OrderBy(kr => kr.Bezeichnung)
                 .ToListAsync();
         }
 
