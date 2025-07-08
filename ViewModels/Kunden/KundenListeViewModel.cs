@@ -192,9 +192,9 @@ namespace TSV.ViewModels.Kunden
             {
                 // Navigation zu Kunden-Detail Seite (Create Mode)
                 var parameters = new Dictionary<string, object>
-                {
-                    { "Mode", "Create" }
-                };
+        {
+            { "Mode", "Create" }
+        };
 
                 await _navigationService.NavigateToAsync("KundenDetail", parameters);
             }
@@ -215,10 +215,10 @@ namespace TSV.ViewModels.Kunden
 
                 // Navigation zu Kunden-Detail Seite (Edit Mode)
                 var parameters = new Dictionary<string, object>
-                {
-                    { "KundeId", kunde.Id },
-                    { "Mode", "Edit" }
-                };
+        {
+            { "KundeId", kunde.Id },
+            { "Mode", "Edit" }
+        };
 
                 await _navigationService.NavigateToAsync("KundenDetail", parameters);
             }
@@ -228,7 +228,6 @@ namespace TSV.ViewModels.Kunden
                 System.Diagnostics.Debug.WriteLine($"ExecuteKundeSelectedAsync Error: {ex}");
             }
         }
-
         private async Task ExecuteRefreshAsync()
         {
             await LoadKundenAsync();
@@ -242,6 +241,12 @@ namespace TSV.ViewModels.Kunden
         {
             // Wird aufgerufen wenn Page erscheint
             await ExecuteRefreshAsync();
+        }
+        public override async Task OnNavigatedToAsync()
+        {
+            // Wird aufgerufen wenn zur Page navigiert wird
+            await LoadKundenAsync();
+            return base.OnNavigatedToAsync();
         }
     }
 }

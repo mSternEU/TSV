@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="TSV.Views.Kunden.KundenDetailPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{Binding Title}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- Content -->
+            <RowDefinition Height="Auto" />
+            <!-- Action Buttons -->
+            <RowDefinition Height="Auto" />
+            <!-- Status Bar -->
+        </Grid.RowDefinitions>
+
+        <!-- =====================================================
+             LOADING OVERLAY
+             ===================================================== -->
+        <Border Grid.Row="0" Grid.RowSpan="3"
+                IsVisible="{Binding IsLoading}"
+                BackgroundColor="#80000000"
+                ZIndex="100">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   Color="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+                                   WidthRequest="50"
+                                   HeightRequest="50" />
+                <Label Text="Lade..."
+                       TextColor="White"
+                       FontSize="16"
+                       Margin="0,10,0,0" />
+            </StackLayout>
+        </Border>
+
+        <!-- =====================================================
+             MAIN CONTENT - CUSTOMER FORM
+             ===================================================== -->
+        <ScrollView Grid.Row="0" Padding="15">
+            <StackLayout Spacing="20">
+
+                <!-- =====================================================
+                     PERSONAL INFORMATION SECTION
+                     ===================================================== -->
+                <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#333333}"
+                        StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#555555}"
+                        Padding="20">
+                    <StackLayout Spacing="15">
+
+                        <!-- Section Header -->
+                        <Label Text="👤 Persönliche Informationen"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}" />
+
+                        <!-- Name Row -->
+                        <Grid ColumnDefinitions="*,10,*" RowDefinitions="Auto,Auto,Auto">
+
+                            <!-- Vorname -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Vorname *"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="{Binding VornameError, Converter={StaticResource StringToBorderColorConverter}}"
+                                        StrokeThickness="1">
+                                    <Entry Text="{Binding Kunde.Vorname}"
+                                           Placeholder="Vorname eingeben"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                                <Label Text="{Binding VornameError}"
+                                       TextColor="Red"
+                                       FontSize="12"
+                                       IsVisible="{Binding VornameError, Converter={StaticResource StringToBoolConverter}}" />
+                            </StackLayout>
+
+                            <!-- Nachname -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Nachname *"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="{Binding NachnameError, Converter={StaticResource StringToBorderColorConverter}}"
+                                        StrokeThickness="1">
+                                    <Entry Text="{Binding Kunde.Nachname}"
+                                           Placeholder="Nachname eingeben"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                                <Label Text="{Binding NachnameError}"
+                                       TextColor="Red"
+                                       FontSize="12"
+                                       IsVisible="{Binding NachnameError, Converter={StaticResource StringToBoolConverter}}" />
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Email -->
+                        <StackLayout>
+                            <Label Text="E-Mail *"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Stroke="{Binding MailError, Converter={StaticResource StringToBorderColorConverter}}"
+                                    StrokeThickness="1">
+                                <Entry Text="{Binding Kunde.Mail}"
+                                       Placeholder="email@beispiel.de"
+                                       Keyboard="Email"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                            <Label Text="{Binding MailError}"
+                                   TextColor="Red"
+                                   FontSize="12"
+                                   IsVisible="{Binding MailError, Converter={StaticResource StringToBoolConverter}}" />
+                        </StackLayout>
+
+                        <!-- Telefon -->
+                        <StackLayout>
+                            <Label Text="Telefon *"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Stroke="{Binding TelefonError, Converter={StaticResource StringToBorderColorConverter}}"
+                                    StrokeThickness="1">
+                                <Entry Text="{Binding Kunde.Telefon}"
+                                       Placeholder="+49 123 456789"
+                                       Keyboard="Telephone"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                            <Label Text="{Binding TelefonError}"
+                                   TextColor="Red"
+                                   FontSize="12"
+                                   IsVisible="{Binding TelefonError, Converter={StaticResource StringToBoolConverter}}" />
+                        </StackLayout>
+
+                        <!-- Geburtsdatum & Geschlecht Row -->
+                        <Grid ColumnDefinitions="*,10,*">
+
+                            <!-- Geburtsdatum -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Geburtsdatum"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <DatePicker Date="{Binding Kunde.Geburtsdatum}"
+                                                BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+
+                            <!-- Geschlecht -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Geschlecht"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Picker ItemsSource="{Binding Geschlechter}"
+                                            SelectedItem="{Binding Kunde.Geschlecht}"
+                                            ItemDisplayBinding="{Binding Bezeichnung}"
+                                            Title="Geschlecht wählen"
+                                            BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+                        </Grid>
+
+                    </StackLayout>
+                </Border>
+
+                <!-- =====================================================
+                     ADDRESS SECTION
+                     ===================================================== -->
+                <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#333333}"
+                        StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#555555}"
+                        Padding="20">
+                    <StackLayout Spacing="15">
+
+                        <!-- Section Header -->
+                        <Label Text="🏠 Adresse"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}" />
+
+                        <!-- Straße -->
+                        <StackLayout>
+                            <Label Text="Straße"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                    StrokeShape="RoundRectangle 8">
+                                <Entry Text="{Binding Kunde.Strasse}"
+                                       Placeholder="Musterstraße 123"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+
+                        <!-- PLZ & Ort Row -->
+                        <Grid ColumnDefinitions="120,10,*">
+                            <!-- PLZ -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="PLZ"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Entry Text="{Binding Kunde.Plz}"
+                                           Placeholder="12345"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+
+                            <!-- Ort -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Ort"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Entry Text="{Binding Kunde.Ort}"
+                                           Placeholder="Musterstadt"
+                                           BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+                        </Grid>
+
+                    </StackLayout>
+                </Border>
+
+                <!-- =====================================================
+                     ADDITIONAL INFORMATION SECTION
+                     ===================================================== -->
+                <Border BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#333333}"
+                        StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#555555}"
+                        Padding="20">
+                    <StackLayout Spacing="15">
+
+                        <!-- Section Header -->
+                        <Label Text="ℹ️ Zusätzliche Informationen"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}" />
+
+                        <!-- Rolle & Zahlweise Row -->
+                        <Grid ColumnDefinitions="*,10,*">
+
+                            <!-- Kunde Rolle -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Rolle"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Picker ItemsSource="{Binding KundeRollen}"
+                                            SelectedItem="{Binding Kunde.KundeRolle}"
+                                            ItemDisplayBinding="{Binding Bezeichnung}"
+                                            Title="Rolle wählen"
+                                            BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+
+                            <!-- Zahlweise -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Zahlweise"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8">
+                                    <Picker ItemsSource="{Binding Zahlweisen}"
+                                            SelectedItem="{Binding Kunde.Zahlweise}"
+                                            ItemDisplayBinding="{Binding Bezeichnung}"
+                                            Title="Zahlweise wählen"
+                                            BackgroundColor="Transparent" />
+                                </Border>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Körpergröße -->
+                        <StackLayout>
+                            <Label Text="Körpergröße (cm)"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                    StrokeShape="RoundRectangle 8">
+                                <Entry Text="{Binding Kunde.Koerpergroesse}"
+                                       Placeholder="175"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Notizen -->
+                        <StackLayout>
+                            <Label Text="Notizen"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
+                                    StrokeShape="RoundRectangle 8">
+                                <Editor Text="{Binding Kunde.Notes}"
+                                        Placeholder="Zusätzliche Informationen..."
+                                        HeightRequest="100"
+                                        BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+
+                    </StackLayout>
+                </Border>
+
+                <!-- Spacer für Action Buttons -->
+                <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- =====================================================
+             ACTION BUTTONS
+             ===================================================== -->
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#2B2B2B}"
+                StrokeShape="RoundRectangle 15,15,0,0"
+                Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#555555}"
+                Padding="15">
+
+            <Grid ColumnDefinitions="*,10,*,10,*">
+
+                <!-- Cancel Button -->
+                <Button Grid.Column="0"
+                        Text="❌ Abbrechen"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#6C757D, Dark=#495057}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HeightRequest="45" />
+
+                <!-- Delete Button (nur im Edit-Modus) -->
+                <Button Grid.Column="2"
+                        Text="🗑️ Löschen"
+                        Command="{Binding DeleteCommand}"
+                        IsVisible="{Binding CanDelete}"
+                        BackgroundColor="{AppThemeBinding Light=#DC3545, Dark=#BD2130}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HeightRequest="45" />
+
+                <!-- Save Button -->
+                <Button Grid.Column="4"
+                        Text="{Binding IsCreateMode, Converter={StaticResource BoolToSaveTextConverter}}"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding CanSave}"
+                        BackgroundColor="{AppThemeBinding Light=#28A745, Dark=#20C997}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HeightRequest="45">
+
+                    <!-- Loading Indicator im Save Button -->
+                    <Button.ContentLayout>
+                        <Button.ContentLayout.Orientation>Horizontal</Button.ContentLayout.Orientation>
+                    </Button.ContentLayout>
+                </Button>
+
+            </Grid>
+        </Border>
+
+        <!-- =====================================================
+             STATUS BAR
+             ===================================================== -->
+        <Border Grid.Row="2"
+                BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                Padding="15,8">
+            <StackLayout Orientation="Horizontal" Spacing="10">
+
+                <!-- Status Message -->
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start" />
+
+                <!-- Validation Status -->
+                <Label Text="⚠️ Eingabefehler vorhanden"
+                       FontSize="12"
+                       TextColor="Red"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       IsVisible="{Binding HasValidationErrors}" />
+
+            </StackLayout>
+        </Border>
+
+    </Grid>
+
+    <!-- =====================================================
+         RESOURCE DICTIONARY (Value Converters)
+         ===================================================== -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <!-- String to Bool Converter (für Validation Error Visibility) -->
+            <x:String x:Key="StringToBoolConverter">StringToBoolConverter</x:String>
+
+            <!-- String to Border Color Converter (für Validation Error Borders) -->
+            <x:String x:Key="StringToBorderColorConverter">StringToBorderColorConverter</x:String>
+
+            <!-- Bool to Save Text Converter -->
+            <x:String x:Key="BoolToSaveTextConverter">BoolToSaveTextConverter</x:String>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+</ContentPage>

@@ -11,6 +11,9 @@ using TSV.Views.Kunden;
 using TSV.ViewModels.Kunden;
 using TSV.ViewModels;
 
+// Value Converters
+using TSV.Converters;
+
 namespace TSV;
 
 public static class MauiProgram
@@ -25,7 +28,6 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
-
 #if DEBUG
         builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
@@ -36,7 +38,6 @@ public static class MauiProgram
 
         // Connection String für SQL Server Express
         var connectionString = "Server=L12296\\SQLEXPRESS;Database=TSV;Integrated Security=true;TrustServerCertificate=true;";
-      
 
         // Entity Framework registrieren
         builder.Services.AddDbContext<TsvDbContext>(options =>
@@ -49,6 +50,11 @@ public static class MauiProgram
         // NAVIGATION SERVICE
         // =====================================================
         builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+        // =====================================================
+        // VALUE CONVERTERS - Werden in App.xaml registriert
+        // =====================================================
+        // Value Converters werden in App.xaml als Resources definiert
 
         // =====================================================
         // PAGES & VIEWMODELS - Hauptseiten
@@ -66,9 +72,9 @@ public static class MauiProgram
         builder.Services.AddTransient<KundenListePage>();
         builder.Services.AddTransient<KundenListeViewModel>();
 
-        // Kunden Detail (für später)
-        //builder.Services.AddTransient<KundenDetailPage>();
-        //builder.Services.AddTransient<KundenDetailViewModel>();
+        // Kunden Detail (NEU!)
+        builder.Services.AddTransient<KundenDetailPage>();
+        builder.Services.AddTransient<KundenDetailViewModel>();
 
         // =====================================================
         // ROUTING CONFIGURATION
@@ -76,7 +82,7 @@ public static class MauiProgram
 
         // Navigation Routes registrieren
         Routing.RegisterRoute("KundenListe", typeof(KundenListePage));
-        //Routing.RegisterRoute("KundenDetail", typeof(KundenDetailPage));
+        Routing.RegisterRoute("KundenDetail", typeof(KundenDetailPage)); // NEU!
 
         // Weitere Routes (für später)
         // Routing.RegisterRoute("KurseListe", typeof(KurseListePage));

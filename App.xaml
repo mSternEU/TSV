@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TSV"
+             xmlns:converters="clr-namespace:TSV.Converters"
              x:Class="TSV.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +10,15 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- =====================================================
+                 VALUE CONVERTERS (Global verfügbar)
+                 ===================================================== -->
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <converters:StringToBorderColorConverter x:Key="StringToBorderColorConverter" />
+            <converters:BoolToSaveTextConverter x:Key="BoolToSaveTextConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
