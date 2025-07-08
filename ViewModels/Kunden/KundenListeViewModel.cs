@@ -246,7 +246,7 @@ namespace TSV.ViewModels.Kunden
         {
             // Wird aufgerufen wenn zur Page navigiert wird
             await LoadKundenAsync();
-            return base.OnNavigatedToAsync();
+            await base.OnNavigatedToAsync();
         }
     }
 }

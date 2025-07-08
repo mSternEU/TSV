@@ -362,22 +362,29 @@
                         FontAttributes="Bold"
                         HeightRequest="45" />
 
-                <!-- Save Button -->
-                <Button Grid.Column="4"
-                        Text="{Binding IsCreateMode, Converter={StaticResource BoolToSaveTextConverter}}"
-                        Command="{Binding SaveCommand}"
-                        IsEnabled="{Binding CanSave}"
-                        BackgroundColor="{AppThemeBinding Light=#28A745, Dark=#20C997}"
-                        TextColor="White"
-                        CornerRadius="10"
-                        FontAttributes="Bold"
-                        HeightRequest="45">
+                <!-- Save Button mit Loading Indicator -->
+                <StackLayout Grid.Column="4" Orientation="Horizontal" Spacing="8">
 
-                    <!-- Loading Indicator im Save Button -->
-                    <Button.ContentLayout>
-                        <Button.ContentLayout.Orientation>Horizontal</Button.ContentLayout.Orientation>
-                    </Button.ContentLayout>
-                </Button>
+                    <!-- Loading Spinner (nur beim Speichern) -->
+                    <ActivityIndicator IsRunning="{Binding IsSaving}" 
+                                       IsVisible="{Binding IsSaving}"
+                                       Color="White"
+                                       WidthRequest="20" 
+                                       HeightRequest="20"
+                                       VerticalOptions="Center" />
+
+                    <!-- Save Button -->
+                    <Button Text="{Binding IsCreateMode, Converter={StaticResource BoolToSaveTextConverter}}"
+                            Command="{Binding SaveCommand}"
+                            IsEnabled="{Binding CanSave}"
+                            BackgroundColor="{AppThemeBinding Light=#28A745, Dark=#20C997}"
+                            TextColor="White"
+                            CornerRadius="10"
+                            FontAttributes="Bold"
+                            HeightRequest="45" 
+                            HorizontalOptions="FillAndExpand" />
+
+                </StackLayout>
 
             </Grid>
         </Border>

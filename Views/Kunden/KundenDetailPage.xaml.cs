@@ -2,8 +2,6 @@ using TSV.ViewModels.Kunden;
 
 namespace TSV.Views.Kunden
 {
-    [QueryProperty(nameof(KundeId), "KundeId")]
-    [QueryProperty(nameof(Mode), "Mode")]
     public partial class KundenDetailPage : ContentPage
     {
         private readonly KundenDetailViewModel _viewModel;
@@ -15,50 +13,59 @@ namespace TSV.Views.Kunden
             BindingContext = viewModel;
         }
 
-        private Dictionary<string, object> _navigationParameters = new();
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            // ViewModel mit Parametern initialisieren
+            // Parameter aus Shell Navigation extrahieren
+            var parameters = ExtractNavigationParameters();
+
+            // ViewModel initialisieren
             if (_viewModel != null)
             {
-                await _viewModel.InitializeAsync(_navigationParameters);
+                await _viewModel.InitializeAsync(parameters);
             }
         }
 
-        // MAUI Query Parameter Handling - wird von Navigation aufgerufen
-        public void SetParameters(Dictionary<string, object> parameters)
+        private Dictionary<string, object> ExtractNavigationParameters()
         {
-            _navigationParameters = parameters ?? new Dictionary<string, object>();
+            var parameters = new Dictionary<string, object>();
 
-            // Falls Page bereits geladen ist, direkt initialisieren
-            if (_viewModel != null)
+            // Parameter aus der aktuellen Shell Route extrahieren
+            var query = Shell.Current.CurrentState?.Location?.Query;
+            if (!string.IsNullOrEmpty(query))
             {
-                _ = Task.Run(async () => await _viewModel.InitializeAsync(_navigationParameters));
-            }
-        }
-
-        // Alternative: MAUI Query Attributes (für typisierte Parameter)
-        [QueryProperty(nameof(KundeId), "KundeId")]
-        [QueryProperty(nameof(Mode), "Mode")]
-        public string KundeId
-        {
-            set
-            {
-                if (int.TryParse(value, out var id))
+                // Einfache Query-Parameter Parsing
+                var queryParts = query.TrimStart('?').Split('&');
+                foreach (var part in queryParts)
                 {
-                    _navigationParameters["KundeId"] = id;
+                    var keyValue = part.Split('=');
+                    if (keyValue.Length == 2)
+                    {
+                        var key = Uri.UnescapeDataString(keyValue[0]);
+                        var value = Uri.UnescapeDataString(keyValue[1]);
+
+                        if (key == "KundeId" && int.TryParse(value, out var kundeId))
+                        {
+                            parameters["KundeId"] = kundeId;
+                        }
+                        else if (key == "Mode")
+                        {
+                            parameters["Mode"] = value;
+                        }
+                    }
                 }
             }
+
+            return parameters;
         }
 
-        public string Mode
+        // Fallback: Direkte Parameter-Setzung
+        public void SetParameters(Dictionary<string, object> parameters)
         {
-            set
+            if (_viewModel != null)
             {
-                _navigationParameters["Mode"] = value ?? "Create";
+                _ = Task.Run(async () => await _viewModel.InitializeAsync(parameters ?? new Dictionary<string, object>()));
             }
         }
     }
