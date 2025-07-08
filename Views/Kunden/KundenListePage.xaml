@@ -112,7 +112,7 @@
 
                             <!-- Email -->
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="{Binding Email}"
+                                   Text="{Binding Mail}"
                                    FontSize="14"
                                    TextColor="{AppThemeBinding Light=#666666, Dark=#CCCCCC}"
                                    Margin="0,2,0,0" />
