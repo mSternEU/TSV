@@ -20,9 +20,8 @@ namespace TSV.Services.Data
         public async Task<List<Kunde>> GetKundenAsync()
         {
             return await _context.Kunden
-                //.Include(k => k.KundeRolle)
                 .Include(k => k.Buchungen)
-                .ThenInclude(b => b.Kurs)
+                // .ThenInclude(b => b.Kurs)  // Temporär auskommentieren
                 .OrderBy(k => k.Nachname)
                 .ThenBy(k => k.Vorname)
                 .ToListAsync();

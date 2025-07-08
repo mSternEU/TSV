@@ -87,7 +87,7 @@ public partial class Buchung : ModelBase
         set => SetProperty(ref _bezahlt, value);
     }
 
-    [Column("created_at")]
+    [Column("erstellt_am")]
     public DateTime ErstelltAm
     {
         get => _erstelltAm;

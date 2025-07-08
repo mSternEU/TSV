@@ -169,7 +169,7 @@ namespace TSV.ViewModels.Kunden
                         : AllKunden.Where(k =>
                             k.Vorname.ToLower().Contains(searchTerm) ||
                             k.Nachname.ToLower().Contains(searchTerm) ||
-                            k.Email.ToLower().Contains(searchTerm));
+                            k.Mail.ToLower().Contains(searchTerm));
                         //    k.DisplayName.ToLower().Contains(searchTerm)); eventuell später einfügen
 
                     foreach (var kunde in filteredResults)

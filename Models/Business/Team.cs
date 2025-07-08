@@ -62,7 +62,7 @@ public partial class Team : ModelBase
         set => SetProperty(ref _funktion, value);
     }
 
-    [Column("created_at")]
+    [Column("erstellt_am")]
     public DateTime ErstelltAm
     {
         get => _erstelltAm;

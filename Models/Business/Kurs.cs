@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TSV.Models.Business
 {
-    [Table("kurs")]
+    [Table("kurse")]
     public class Kurs : ModelBase
     {
         private int _id;

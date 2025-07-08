@@ -56,6 +56,13 @@ namespace TSV.Services.Data
                 .HasForeignKey(b => b.P1)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Kunde → KundeRolle (Optional)
+            modelBuilder.Entity<Kunde>()
+                .HasOne(k => k.KundeRolle)
+                .WithMany(kr => kr.Kunden)
+                .HasForeignKey(k => k.KundeRolleId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Team → MitarbeiterFunktion (Optional)
             modelBuilder.Entity<Team>()
                 .HasOne(t => t.MitarbeiterFunktion)
@@ -77,16 +84,15 @@ namespace TSV.Services.Data
                 .HasForeignKey(b => b.P2)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // =====================================================
-            // KEINE SEED-DATEN (wie besprochen)
-            // =====================================================
-
-            // Erstmal leer lassen - Daten kommen über UI!
+            // Buchung → Kurs (Required)
+            modelBuilder.Entity<Buchung>()
+                .HasOne(b => b.Kurs)
+                .WithMany(k => k.Buchungen)
+                .HasForeignKey(b => b.KursId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
-        // =====================================================
-        // HELPER METHODS (Optional)
-        // =====================================================
+        // Helfergedöns 
 
         public async Task<bool> CanConnectAsync()
         {

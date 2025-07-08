@@ -24,11 +24,13 @@ namespace TSV.Models.Business
         private bool _istAktiv;
         private DateTime? _geloeschtAm;
         private int? _geloeschtVon;
+        private int? _kundeRolleId;
 
         // Navigation Properties
         private Geschlecht _geschlecht;
         private Zahlweise _zahlweise;
         private List<Buchung> _buchungen;
+        private KundeRolle _kundeRolle;
 
         [Key]
         [Column("id")]
@@ -121,6 +123,13 @@ namespace TSV.Models.Business
             set => SetProperty(ref _zahlweiseId, value);
         }
 
+        [Column("kunde_rolle_id")]
+        public int? KundeRolleId
+        {
+            get => _kundeRolleId;
+            set => SetProperty(ref _kundeRolleId, value);
+        }
+
         [Column("koerpergroesse")]
         public int? Koerpergroesse
         {
@@ -135,7 +144,7 @@ namespace TSV.Models.Business
             set => SetProperty(ref _notes, value);
         }
 
-        [Column("created_at")]
+        [Column("erstellt_am")]
         public DateTime ErstelltAm
         {
             get => _erstelltAm;
@@ -176,6 +185,13 @@ namespace TSV.Models.Business
         {
             get => _zahlweise;
             set => SetProperty(ref _zahlweise, value);
+        }
+
+        [ForeignKey("KundeRolleId")]
+        public KundeRolle KundeRolle
+        {
+            get => _kundeRolle;
+            set => SetProperty(ref _kundeRolle, value);
         }
 
         public List<Buchung> Buchungen
