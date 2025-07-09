@@ -47,8 +47,9 @@ public static class MauiProgram
         builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 
         // =====================================================
-        // NAVIGATION SERVICE
+        // NAVIGATION SERVICES (Erweitert um ParameterService)
         // =====================================================
+        builder.Services.AddSingleton<IParameterService, ParameterService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
 
         // =====================================================

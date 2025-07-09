@@ -5,10 +5,17 @@ namespace TSV.Services.Navigation
 {
     public class NavigationService : INavigationService
     {
+        private readonly IParameterService _parameterService;
+
         public event EventHandler<NavigationItem> NavigationChanged;
 
         private readonly List<NavigationItem> _navigationHistory = new();
         private int _currentIndex = -1;
+
+        public NavigationService(IParameterService parameterService)
+        {
+            _parameterService = parameterService;
+        }
 
         public bool CanGoBack => _currentIndex > 0;
         public bool CanGoForward => _currentIndex < _navigationHistory.Count - 1;
@@ -31,10 +38,21 @@ namespace TSV.Services.Navigation
         {
             try
             {
-                // MAUI Shell Navigation
-                await Shell.Current.GoToAsync(navigationItem.Route, navigationItem.Parameters);
+                System.Diagnostics.Debug.WriteLine($"🔍 NavigationService: Navigating to {navigationItem.Route}");
 
-                // History Management (dein WPF-Pattern beibehalten)
+                // SCHRITT 1: Parameter im ParameterService zwischenspeichern (falls vorhanden)
+                if (navigationItem.Parameters?.Any() == true)
+                {
+                    _parameterService.SetParameters(navigationItem.Route, navigationItem.Parameters);
+                    System.Diagnostics.Debug.WriteLine($"🔍 NavigationService: Stored {navigationItem.Parameters.Count} parameters for {navigationItem.Route}");
+                }
+
+                // SCHRITT 2: Einfache Navigation OHNE Query String - wie bisher!
+                await Shell.Current.GoToAsync(navigationItem.Route);
+
+                System.Diagnostics.Debug.WriteLine($"✅ NavigationService: Navigation to {navigationItem.Route} completed");
+
+                // History Management
                 AddToHistory(navigationItem);
 
                 // Event feuern
@@ -42,8 +60,8 @@ namespace TSV.Services.Navigation
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Navigation failed: {ex.Message}");
-                // Hier könntest du später ein User-Notification-System einbauen
+                System.Diagnostics.Debug.WriteLine($"❌ NavigationService: Navigation failed: {ex.Message}");
+                throw;
             }
         }
 
@@ -54,7 +72,6 @@ namespace TSV.Services.Navigation
             _currentIndex--;
             var targetItem = _navigationHistory[_currentIndex];
 
-            // MAUI Shell Back Navigation
             await Shell.Current.GoToAsync("..");
             NavigationChanged?.Invoke(this, targetItem);
         }
@@ -66,8 +83,7 @@ namespace TSV.Services.Navigation
             _currentIndex++;
             var targetItem = _navigationHistory[_currentIndex];
 
-            await Shell.Current.GoToAsync(targetItem.Route, targetItem.Parameters);
-            NavigationChanged?.Invoke(this, targetItem);
+            await NavigateToAsync(targetItem);
         }
 
         private void AddToHistory(NavigationItem item)
