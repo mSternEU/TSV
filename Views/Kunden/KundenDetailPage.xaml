@@ -151,7 +151,7 @@
                                        TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
                                 <Border BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#2A2A2A}"
                                         StrokeShape="RoundRectangle 8">
-                                    <DatePicker Date="{Binding Kunde.Geburtsdatum}"
+                                    <DatePicker Date="{Binding Kunde.Geburtsdatum, FallbackValue='01/01/1990'}"
                                                 BackgroundColor="Transparent" />
                                 </Border>
                             </StackLayout>

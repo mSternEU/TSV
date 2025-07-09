@@ -206,33 +206,82 @@ namespace TSV.ViewModels.Kunden
                 IsLoading = true;
                 StatusMessage = "Lade...";
 
+                System.Diagnostics.Debug.WriteLine($"🔍 KundenDetailViewModel.InitializeAsync - Parameter count: {parameters?.Count ?? 0}");
+
+                // DEBUG: Alle Parameter ausgeben
+                if (parameters != null)
+                {
+                    foreach (var param in parameters)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"🔍   Parameter: {param.Key} = {param.Value} (Type: {param.Value?.GetType().Name})");
+                    }
+                }
+
                 // Dropdown-Daten laden
                 await LoadDropdownDataAsync();
 
                 // Parameter auswerten
                 if (parameters != null)
                 {
-                    if (parameters.TryGetValue("KundeId", out var kundeIdObj) &&
-                        kundeIdObj is int kundeId && kundeId > 0)
+                    System.Diagnostics.Debug.WriteLine($"🔍 Checking parameters...");
+
+                    if (parameters.TryGetValue("KundeId", out var kundeIdObj))
                     {
-                        // Edit Mode
-                        await LoadKundeAsync(kundeId);
-                        IsEditMode = true;
+                        System.Diagnostics.Debug.WriteLine($"🔍 Found KundeId parameter: {kundeIdObj} (Type: {kundeIdObj?.GetType().Name})");
+
+                        // Verschiedene Typen handhaben
+                        int kundeId = 0;
+                        if (kundeIdObj is int intId)
+                        {
+                            kundeId = intId;
+                        }
+                        else if (kundeIdObj is string strId && int.TryParse(strId, out var parsedId))
+                        {
+                            kundeId = parsedId;
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"🔍 Parsed KundeId: {kundeId}");
+
+                        if (kundeId > 0)
+                        {
+                            // Edit Mode
+                            System.Diagnostics.Debug.WriteLine($"🔍 Loading kunde with ID: {kundeId}");
+                            await LoadKundeAsync(kundeId);
+                            IsEditMode = true;
+                            System.Diagnostics.Debug.WriteLine($"🔍 Edit mode set. Kunde loaded: {Kunde?.VollName}");
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"🔍 Invalid KundeId: {kundeId}");
+                        }
                     }
                     else if (parameters.TryGetValue("Mode", out var modeObj) &&
                              modeObj?.ToString() == "Create")
                     {
                         // Create Mode
+                        System.Diagnostics.Debug.WriteLine($"🔍 Create mode detected");
+                        IsEditMode = false;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"🔍 No valid parameters found, defaulting to Create mode");
                         IsEditMode = false;
                     }
                 }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"🔍 No parameters provided, defaulting to Create mode");
+                    IsEditMode = false;
+                }
 
                 StatusMessage = string.Empty;
+                System.Diagnostics.Debug.WriteLine($"🔍 InitializeAsync completed. IsEditMode: {IsEditMode}");
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Fehler beim Laden: {ex.Message}";
-                System.Diagnostics.Debug.WriteLine($"InitializeAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ InitializeAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack Trace: {ex.StackTrace}");
             }
             finally
             {
@@ -269,25 +318,35 @@ namespace TSV.ViewModels.Kunden
         {
             try
             {
+                System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Loading kunde with ID: {kundeId}");
+
                 var kunde = await _databaseService.GetKundeByIdAsync(kundeId);
+
                 if (kunde != null)
                 {
+                    System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Kunde found: {kunde.VollName}");
+                    System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Kunde details: ID={kunde.Id}, Email={kunde.Mail}, Phone={kunde.Telefon}");
+
                     // Property Changed Handler vorübergehend entfernen
                     if (Kunde != null)
                         Kunde.PropertyChanged -= OnKundePropertyChanged;
 
                     Kunde = kunde;
                     Kunde.PropertyChanged += OnKundePropertyChanged;
+
+                    System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Kunde assigned to property. Current Kunde: {Kunde?.VollName}");
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine($"❌ LoadKundeAsync - Kunde not found for ID: {kundeId}");
                     StatusMessage = "Kunde nicht gefunden";
                 }
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Fehler beim Laden des Kunden: {ex.Message}";
-                System.Diagnostics.Debug.WriteLine($"LoadKundeAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ LoadKundeAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack Trace: {ex.StackTrace}");
             }
         }
 

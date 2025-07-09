@@ -213,19 +213,33 @@ namespace TSV.ViewModels.Kunden
             {
                 SelectedKunde = kunde;
 
+                System.Diagnostics.Debug.WriteLine($"🔍 KundenListeViewModel.ExecuteKundeSelectedAsync - Kunde selected: {kunde.VollName}");
+                System.Diagnostics.Debug.WriteLine($"🔍   → Kunde ID: {kunde.Id}");
+                System.Diagnostics.Debug.WriteLine($"🔍   → Kunde Mail: {kunde.Mail}");
+                System.Diagnostics.Debug.WriteLine($"🔍   → Kunde Telefon: {kunde.Telefon}");
+
                 // Navigation zu Kunden-Detail Seite (Edit Mode)
                 var parameters = new Dictionary<string, object>
-        {
-            { "KundeId", kunde.Id },
-            { "Mode", "Edit" }
-        };
+                {
+                    { "KundeId", kunde.Id },
+                    { "Mode", "Edit" }
+                };
+
+                System.Diagnostics.Debug.WriteLine($"🔍 Navigating to KundenDetail with parameters:");
+                foreach (var param in parameters)
+                {
+                    System.Diagnostics.Debug.WriteLine($"🔍   → {param.Key} = {param.Value}");
+                }
 
                 await _navigationService.NavigateToAsync("KundenDetail", parameters);
+
+                System.Diagnostics.Debug.WriteLine($"🔍 Navigation completed");
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Navigation Fehler: {ex.Message}";
-                System.Diagnostics.Debug.WriteLine($"ExecuteKundeSelectedAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ ExecuteKundeSelectedAsync Error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"❌ Stack Trace: {ex.StackTrace}");
             }
         }
         private async Task ExecuteRefreshAsync()
