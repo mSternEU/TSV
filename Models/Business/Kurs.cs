@@ -25,7 +25,7 @@ namespace TSV.Models.Business
         private List<Buchung> _buchungen;
 
         [Key]
-        [Column("id")]
+        [Column("kurs_id")]
         public int Id
         {
             get => _id;
@@ -34,14 +34,14 @@ namespace TSV.Models.Business
 
         [Required]
         [MaxLength(200)]
-        [Column("kurs_name")]
+        [Column("kurz_id")]
         public string KursName
         {
             get => _kursName;
             set => SetProperty(ref _kursName, value);
         }
 
-        [Column("beschreibung")]
+        [Column("kursbezeichnung")]
         public string Beschreibung
         {
             get => _beschreibung;
@@ -100,7 +100,7 @@ namespace TSV.Models.Business
             set => SetProperty(ref _anzahlTermine, value);
         }
 
-        [Column("lehrer_id")]
+        [Column("kursleitung")]
         public int? LehrerId
         {
             get => _lehrerId;
