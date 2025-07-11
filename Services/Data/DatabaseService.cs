@@ -31,8 +31,8 @@ namespace TSV.Services.Data
         {
             return await _context.Kunden
                 //.Include(k => k.KundeRolle)
-                .Include(k => k.Buchungen)
-                .ThenInclude(b => b.Kurs)
+                //.Include(k => k.Buchungen)
+                //.ThenInclude(b => b.Kurs)
                 .FirstOrDefaultAsync(k => k.Id == id);
         }
 
