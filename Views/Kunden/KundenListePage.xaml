@@ -15,7 +15,27 @@
             <RowDefinition Height="Auto" />
             <!-- Status Bar -->
         </Grid.RowDefinitions>
-
+        
+        
+        <!-- =====================================================
+                     DEBUG SECTION (temporär ganz oben einfügen)
+                     ===================================================== -->
+        <Border BackgroundColor="LightYellow" Padding="10" Margin="15,10">
+            <StackLayout>
+                <Label Text="🔍 DEBUG INFO" FontAttributes="Bold" />
+                <Label Text="{Binding Title}" BackgroundColor="LightGray" />
+                <Label Text="{Binding IsEditMode, StringFormat='IsEditMode: {0}'}" />
+                <Label Text="{Binding IsCreateMode, StringFormat='IsCreateMode: {0}'}" />
+                <Label Text="{Binding Kunde.VollName, StringFormat='VollName: {0}'}" />
+                <Label Text="{Binding Kunde.Vorname, StringFormat='Vorname: {0}'}" />
+                <Label Text="{Binding Kunde.Nachname, StringFormat='Nachname: {0}'}" />
+                <Label Text="{Binding Kunde.Mail, StringFormat='Mail: {0}'}" />
+                <Label Text="{Binding Kunde.Telefon, StringFormat='Telefon: {0}'}" />
+                <Label Text="{Binding StatusMessage, StringFormat='Status: {0}'}" />
+            </StackLayout>
+        </Border>
+        
+        
         <!-- =====================================================
              SEARCH BAR
              ===================================================== -->

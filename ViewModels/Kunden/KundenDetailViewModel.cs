@@ -331,10 +331,31 @@ namespace TSV.ViewModels.Kunden
                     if (Kunde != null)
                         Kunde.PropertyChanged -= OnKundePropertyChanged;
 
+                    // DEBUGGING: Vor der Zuweisung
+                    System.Diagnostics.Debug.WriteLine($"🔍 Before assignment - Current Kunde: {Kunde?.VollName ?? "NULL"}");
+
                     Kunde = kunde;
+
+                    // DEBUGGING: Nach der Zuweisung
+                    System.Diagnostics.Debug.WriteLine($"🔍 After assignment - Current Kunde: {Kunde?.VollName ?? "NULL"}");
+                    System.Diagnostics.Debug.WriteLine($"🔍 Kunde Properties: Vorname={Kunde?.Vorname}, Nachname={Kunde?.Nachname}, Mail={Kunde?.Mail}");
+
                     Kunde.PropertyChanged += OnKundePropertyChanged;
 
-                    System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Kunde assigned to property. Current Kunde: {Kunde?.VollName}");
+                    // DEBUGGING: UI Properties prüfen
+                    System.Diagnostics.Debug.WriteLine($"🔍 UI Properties - IsEditMode: {IsEditMode}");
+                    System.Diagnostics.Debug.WriteLine($"🔍 UI Properties - IsCreateMode: {IsCreateMode}");
+                    System.Diagnostics.Debug.WriteLine($"🔍 UI Properties - Title: {Title}");
+
+                    // DEBUGGING: Property Changed Events manuell auslösen
+                    OnPropertyChanged(nameof(Kunde));
+                    OnPropertyChanged(nameof(IsEditMode));
+                    OnPropertyChanged(nameof(IsCreateMode));
+                    OnPropertyChanged(nameof(Title));
+
+                    System.Diagnostics.Debug.WriteLine($"🔍 Manual PropertyChanged events fired");
+
+                    System.Diagnostics.Debug.WriteLine($"🔍 LoadKundeAsync - Kunde assignment completed successfully");
                 }
                 else
                 {
